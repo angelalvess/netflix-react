@@ -1,6 +1,9 @@
 import { Link } from 'react-router-dom';
+import { UserAuth } from '../../context/AuthContext';
 
 function Navbar() {
+  const { user, logOut } = UserAuth();
+
   return (
     <div className="flex items-center justify-between p-4 z-[100] w-full absolute">
       <Link to="/">
