@@ -1,6 +1,27 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { UserAuth } from '../context/AuthContext';
+import { useState } from 'react';
 
 function Login() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const { user, login } = UserAuth();
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError('');
+
+    try {
+      await login(email, password);
+      navigate('/');
+    } catch (error) {
+      console.log(error);
+      setError(error.message);
+    }
+  };
+
   return (
     <div>
       <>
@@ -16,14 +37,23 @@ function Login() {
               <div className="max-w-[320px] mx-auto py-16 ">
                 <h1 className="text-3xl font-bold">Sing In</h1>
 
-                <form className="w-full flex flex-col py-4">
+                {error ? (
+                  <p className="text-red-500 p-3 my-1">{error}</p>
+                ) : null}
+
+                <form
+                  onSubmit={handleSubmit}
+                  className="w-full flex flex-col py-4"
+                >
                   <input
+                    onChange={(e) => setEmail(e.target.value)}
                     className="p-3 my-2 bg-gray-700 rounded"
                     type="email"
                     placeholder="Email or phone number"
                     autoComplete="email"
                   />
                   <input
+                    onChange={(e) => setPassword(e.target.value)}
                     className="p-3 my-2 bg-gray-700 rounded"
                     type="password"
                     placeholder="Password"
